@@ -1,14 +1,13 @@
 import type { Config } from "tailwindcss";
-const svgToDataUri = require("mini-svg-data-uri");
 
+const svgToDataUri = require("mini-svg-data-uri");
 const colors = require("tailwindcss/colors");
 
-// Utility function to flatten color palette
+// Re-implemented flattenColorPalette function
 function flattenColorPalette(colors) {
   const result = {};
-
   for (const [key, value] of Object.entries(colors)) {
-    if (typeof value === 'object') {
+    if (typeof value === 'object' && value !== null) {
       for (const [subKey, subValue] of Object.entries(value)) {
         result[`${key}-${subKey}`] = subValue;
       }
@@ -16,12 +15,11 @@ function flattenColorPalette(colors) {
       result[key] = value;
     }
   }
-
   return result;
 }
 
 // Plugin to add each Tailwind color as a global CSS variable
-function addVariablesForColors({ addBase, theme }: any) {
+function addVariablesForColors({ addBase, theme }) {
   const allColors = flattenColorPalette(theme('colors'));
   const newVars = Object.fromEntries(
     Object.entries(allColors).map(([key, value]) => [`--${key}`, value])
@@ -32,21 +30,20 @@ function addVariablesForColors({ addBase, theme }: any) {
   });
 }
 
-
-function addSvgPatterns({ matchUtilities, theme }: any) {
+function addSvgPatterns({ matchUtilities, theme }) {
   matchUtilities(
     {
-      'bg-grid': (value: any) => ({
+      'bg-grid': (value) => ({
         backgroundImage: `url("${svgToDataUri(
           `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="${value}"><path d="M0 .5H31.5V32"/></svg>`
         )}")`,
       }),
-      'bg-grid-small': (value: any) => ({
+      'bg-grid-small': (value) => ({
         backgroundImage: `url("${svgToDataUri(
           `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="8" height="8" fill="none" stroke="${value}"><path d="M0 .5H31.5V32"/></svg>`
         )}")`,
       }),
-      'bg-dot': (value: any) => ({
+      'bg-dot': (value) => ({
         backgroundImage: `url("${svgToDataUri(
           `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="16" height="16" fill="none"><circle fill="${value}" id="pattern-circle" cx="10" cy="10" r="1.6257413380501518"></circle></svg>`
         )}")`,
@@ -67,13 +64,11 @@ const config: Config = {
     extend: {
       animation: {
         spotlight: "spotlight 2s ease .75s 1 forwards",
-        scroll: "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
-       
+        scroll: "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite"
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       keyframes: {
         spotlight: {
