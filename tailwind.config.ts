@@ -35,7 +35,7 @@ function addVariablesForColors({ addBase, theme }: any) {
 }
 
 // Plugin to add SVG patterns
-function addSvgPatterns({ matchUtilities, theme }) {
+function addSvgPatterns({ matchUtilities, theme }: any) {
   matchUtilities(
     {
       'bg-grid': (value) => ({
