@@ -18,9 +18,7 @@ export default function RootLayout({
   return (
 
     <html lang="en" className="dark">
-      <head>
-        <link rel="shortcut icon" href="/public/courses/classical-music.jpg" type="image/x-icon" />
-      </head>
+
       <body className={inter.className}>
         <div className="relative w-full flex items-center justify-center ">
           <Navbar />

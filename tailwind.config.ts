@@ -3,16 +3,20 @@ import type { Config } from "tailwindcss";
 const svgToDataUri = require("mini-svg-data-uri");
 const colors = require("tailwindcss/colors");
 
-// Re-implemented flattenColorPalette function
-function flattenColorPalette(colors) {
-  const result = {};
+// Define types for the colors parameter
+type ColorValue = string | Record<string, string>;
+type Colors = Record<string, ColorValue>;
+
+// Re-implemented flattenColorPalette function with explicit types
+function flattenColorPalette(colors: Colors): Record<string, string> {
+  const result: Record<string, string> = {};
   for (const [key, value] of Object.entries(colors)) {
     if (typeof value === 'object' && value !== null) {
       for (const [subKey, subValue] of Object.entries(value)) {
         result[`${key}-${subKey}`] = subValue;
       }
     } else {
-      result[key] = value;
+      result[key] = value as string;
     }
   }
   return result;
@@ -30,6 +34,7 @@ function addVariablesForColors({ addBase, theme }) {
   });
 }
 
+// Plugin to add SVG patterns
 function addSvgPatterns({ matchUtilities, theme }) {
   matchUtilities(
     {
